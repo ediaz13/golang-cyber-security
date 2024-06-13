@@ -113,3 +113,58 @@ func handleClient(conn net.Conn) {
     response := "HTTP/1.1 200 OK\r\n"
     conn.Write([]byte(response))
 }
+```
+This file contains the server implementation. It listens on 0.0.0.0:9998 for incoming connections. Upon receiving a connection, it reads the incoming request and responds with a simple HTTP/1.1 200 OK message.
+
+### client.go
+```go
+package main
+
+import (
+    "fmt"
+    "net"
+)
+
+const (
+    targetHost = "127.0.0.1"
+    targetPort = "9998"
+)
+
+func main() {
+    conn, err := net.Dial("tcp", targetHost+":"+targetPort)
+    if (err != nil) {
+        fmt.Println("Error connecting to server:", err)
+        return
+    }
+    defer conn.Close()
+
+    request := "GET / HTTP/1.1 \r\nHost: hacker.com\r\n\r\n"
+    _, err = conn.Write([]byte(request))
+    if (err != nil) {
+        fmt.Println("Error sending data:", err)
+        return
+    }
+
+    buffer := make([]byte, 4096)
+    n, err := conn.Read(buffer)
+    if (err != nil) {
+        fmt.Println("Error receiving data:", err)
+        return
+    }
+
+    fmt.Println(string(buffer[:n]))
+}
+
+```
+This file contains the client implementation. It connects to the server at 127.0.0.1:9998, sends a HTTP GET request, and prints the server's response.
+
+## License
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+## Contributing
+Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
+
+## Contact
+For any questions or inquiries, please contact diazemanuel27@gmail.com.
+
+Enjoy coding and learning about TCP communication in Go!
